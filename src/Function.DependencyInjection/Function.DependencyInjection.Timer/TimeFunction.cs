@@ -1,16 +1,22 @@
-using System;
+using Function.DependencyInjection.Services.Contracts;
 using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
 
 namespace Function.DependencyInjection.Timer
 {
-    public static class TimeFunction
+    public class TimeFunction
     {
-        [FunctionName("TimeFunction")]
-        public static void Run([TimerTrigger("0 */5 * * * *")]TimerInfo myTimer, ILogger log)
+        private readonly IHelloService _helloService;
+
+        public TimeFunction(IHelloService helloService)
         {
-            log.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
+            _helloService = helloService;
+        }
+
+        [FunctionName("TimeFunction")]
+        public void Run([TimerTrigger("0 */5 * * * *")]TimerInfo myTimer, ILogger log)
+        {
+            log.LogInformation($"OUTPUT: {_helloService.SayHello("Kasun Kodagoda")}");
         }
     }
 }
